@@ -64,7 +64,7 @@ const Home = () => {
         alert('User not logged in');
       }
     } catch (error) {
-      alert('Failed to save details: ' + error); 
+      alert('Failed to save details: ' + error);
     }
   };
 
