@@ -1,0 +1,18 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore environment variables
+.env
+
+# Ignore Google Cloud service account key
+backend/serviceAccountKey.json
+*.json
+
+# Ignore other potential sensitive files
+*.log
+*.env
+.DS_Store
+
+# Ignore IDE specific files
+.vscode/
+.idea/
