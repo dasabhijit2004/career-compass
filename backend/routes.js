@@ -22,7 +22,8 @@ const getResumeKeywords = async (jobDescription) => {
         agentId: "ag:456dff0a:20250403:jd-suggestion:09df26a3",
         messages: [{ role: 'user', content: jobDescription }],
     });
-    return response.choices[0].text.trim();
+    console.log("Response from Mistral:", response);
+    return response;
 };
 
 // Route to generate career advice
