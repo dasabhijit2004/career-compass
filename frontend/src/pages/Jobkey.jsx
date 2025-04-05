@@ -16,7 +16,7 @@ const JobKeyMatcher = () => {
   const handleSubmit = async () => {
     try {
       console.log(jobDescription);
-      const res = await axios.post('http://localhost:8080/api/resume-keywords', {
+      const res = await axios.post('https://career-compass-79i1.onrender.com/api/resume-keywords', {
         jobDescription: jobDescription
       });
       console.log(res.data.keywords.choices[0].message.content);
