@@ -34,6 +34,10 @@ const port = parseInt(process.env.PORT) || process.argv[3] || 8080;
 
 app.use("/api", careerRoutes);
 
+app.get("/health", (req, res) => {
+  res.status(200).json({status:true,msg:"Server is up and running"});
+});
+
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });
