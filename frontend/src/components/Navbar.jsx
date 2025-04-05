@@ -75,9 +75,9 @@ const CareerCompassNavbar = () => {
           <Link to="/resume-generation" onClick={(e) => handleProtectedRoute(e, "/resume-generation")} className="hover:text-purple-600">
             Resume Generator
           </Link>
-          <Link to="/jobkey" onClick={(e) => handleProtectedRoute(e, "/jobkey")} className="hover:text-purple-600">
+          {/* <Link to="/jobkey" onClick={(e) => handleProtectedRoute(e, "/jobkey")} className="hover:text-purple-600">
             JobKey Matcher
-          </Link>
+          </Link> */}
         </div>
 
         {/* Desktop Right Side Buttons */}
