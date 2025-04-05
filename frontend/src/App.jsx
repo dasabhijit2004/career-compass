@@ -11,15 +11,21 @@ import Home from './pages/Home';
 import AuthPage from './components/AuthPage';
 import ResumeGenerator from './pages/Resume';
 import MarkdownToPDF from './pages/Result';
+import CareerCompassNavbar from './components/Navbar';
+import Footer from './components/Footer';
+import JobKeyMatcher from './pages/Jobkey';
+import Profile from './pages/Profile';
+import Pricing from "./pages/Pricing"; // adjust path as needed
 
 function App() {
   return (
     <Router>
+      <CareerCompassNavbar />
       <Routes>
         <Route path="/login" element={<AuthPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/result" element={<MarkdownToPDF />} />
-        <Route path='/resume-generation' element={<ResumeGenerator />} />
+        <Route path="/resume-generation" element={<ResumeGenerator />} />
         <Route path="/quiz" element={<Interest />} />
         <Route path="/strength" element={<Strength />} />
         <Route path="/workstyle" element={<WorkStyleQuestion />} />
@@ -28,7 +34,11 @@ function App() {
         <Route path="/education" element={<Education />} />
         <Route path="/lifestyle" element={<Lifestyle />} />
         <Route path="/longterm" element={<LongTerm />} />
+        <Route path="/jobkey" element={<JobKeyMatcher />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/pricing" element={<Pricing />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

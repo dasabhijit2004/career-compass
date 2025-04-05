@@ -1,12 +1,8 @@
-
 import React, { useState } from "react";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-// import { doc, setDoc } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { auth } from "../firebase";
 
 const interestQuestions = [
   {
@@ -341,198 +337,164 @@ const options = [
   "Strongly Agree",
 ];
 
-const validationSchema = Yup.object().shape({
-  answer: Yup.string().required("Please select an option"),
-});
-
 const Interest = () => {
-  try {
-    const user = auth.currentUser;
-    if (user != null) {
-      const [page, setPage] = useState(0);
-      const [answers, setAnswers] = useState({});
-      const navigate = useNavigate();
-      const isWorkStylePhase = page >= interestQuestions.length;
+  const user = auth.currentUser;
+  const [page, setPage] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-      const MAX_WORK_STYLES = 5;
+  const isWorkStylePhase = page >= interestQuestions.length;
+  const MAX_WORK_STYLES = 5;
 
-      const handleOptionChange = (value) => {
-        if (isWorkStylePhase) {
-          setAnswers((prev) => {
-            const current = prev.workStyles || [];
-            if (current.includes(value)) {
-              return {
-                ...prev,
-                workStyles: current.filter((v) => v !== value),
-              };
-            } else if (current.length < MAX_WORK_STYLES) {
-              return { ...prev, workStyles: [...current, value] };
-            }
-            return prev; // Don't allow more than MAX_WORK_STYLES
-          });
-        } else {
-          setAnswers((prev) => ({
+  const handleOptionChange = (value) => {
+    if (isWorkStylePhase) {
+      setAnswers((prev) => {
+        const current = prev.workStyles || [];
+        if (current.includes(value)) {
+          return {
             ...prev,
-            [interestQuestions[page].short]: options.indexOf(value) + 1,
-          }));
+            workStyles: current.filter((v) => v !== value),
+          };
+        } else if (current.length < MAX_WORK_STYLES) {
+          return { ...prev, workStyles: [...current, value] };
         }
-      };
-
-      const handleSubmit = async () => {
-        // console.log("Final Answers: ", answers);
-        var choicesString = Object.entries(answers)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(", ");
-        console.log("Choices: ", choicesString);
-        try {
-          const response = await axios.post(
-            "http://localhost:8080/api/career-suggestions",
-            { choices: choicesString }
-          );
-          console.log("Response: ", response.data.suggestions.content);
-          console.log(typeof response.data.suggestions.content);
-
-          localStorage.setItem(
-            "suggestions",
-            response.data.suggestions.content
-          );
-        } catch (error) {
-          console.log("Error: ", error);
-        }
-        // console.log(typeof choicesString);
-
-        toast.success("Responses submitted! Redirecting...");
-
-        navigate("/result");
-      };
-
-      return (
-        <div className="flex items-center justify-center min-h-screen p-2 bg-gray-100">
-          <div className="p-6 bg-white shadow rounded-md max-w-xl w-full">
-            <h2 className="text-2xl font-bold mb-4">
-              {isWorkStylePhase
-                ? "Work Style Preferences"
-                : `Passion & Interests - Question ${page + 1}/${
-                    interestQuestions.length
-                  }`}
-            </h2>
-
-            {!isWorkStylePhase ? (
-              <p className="mb-4">{interestQuestions[page].question}</p>
-            ) : (
-              <p className="mb-4">
-                How would you describe your preferred way of working, thinking,
-                and interacting with others?
-              </p>
-            )}
-
-            <Formik
-              key={
-                isWorkStylePhase ? "workStyle" : interestQuestions[page].short
-              }
-              initialValues={{ answer: "" }}
-              validationSchema={isWorkStylePhase ? null : validationSchema}
-              onSubmit={() => {
-                if (!isWorkStylePhase && page < interestQuestions.length - 1) {
-                  setPage(page + 1);
-                } else {
-                  handleSubmit();
-                }
-              }}
-            >
-              {({ setFieldValue }) => (
-                <Form>
-                  {!isWorkStylePhase ? (
-                    options.map((option, index) => (
-                      <div key={index} className="flex items-center mb-2">
-                        <Field
-                          type="radio"
-                          name="answer"
-                          value={option}
-                          checked={
-                            answers[interestQuestions[page]?.short] ===
-                            options.indexOf(option) + 1
-                          }
-                          onChange={() => {
-                            handleOptionChange(option);
-                            setFieldValue("answer", option);
-                            setTimeout(() => setPage(page + 1), 100);
-                          }}
-                          className="mr-2"
-                        />
-                        <label>{option}</label>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {workStyleOptions.map((option, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center bg-gray-200 p-2 rounded"
-                        >
-                          <input
-                            type="checkbox"
-                            id={option}
-                            value={option}
-                            onChange={(e) => handleOptionChange(e.target.value)}
-                            checked={answers.workStyles?.includes(option)}
-                            className="mr-2"
-                          />
-                          <label htmlFor={option} className="text-lg">
-                            {option}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex justify-between mt-4">
-                    {page > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (
-                            isWorkStylePhase &&
-                            page === interestQuestions.length
-                          ) {
-                            setPage(interestQuestions.length - 1);
-                          } else {
-                            setPage(page - 1);
-                          }
-                        }}
-                        className="bg-gray-300 text-black px-4 py-2 rounded"
-                      >
-                        Previous
-                      </button>
-                    )}
-
-                    {isWorkStylePhase ? (
-                      <button
-                        type="button"
-                        onClick={handleSubmit}
-                        className="bg-green-500 text-white px-4 py-2 rounded"
-                        disabled={
-                          !answers.workStyles || answers.workStyles.length === 0
-                        }
-                      >
-                        Submit
-                      </button>
-                    ) : null}
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </div>
-      );
-      console.log("hi");
+        return prev;
+      });
     } else {
-      console.log("hello");
+      setAnswers((prev) => ({
+        ...prev,
+        [interestQuestions[page].short]: options.indexOf(value) + 1,
+      }));
+      // Auto-advance to next question
+      setTimeout(() => setPage((prev) => prev + 1), 200);
     }
-  } catch (error) {
-    console.log(error);
-  }
+  };
+
+  const handlePrevious = () => {
+    if (page > 0) {
+      setPage((prev) => prev - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if ((answers.workStyles || []).length < MAX_WORK_STYLES) {
+      toast.error(`Select exactly ${MAX_WORK_STYLES} work styles.`);
+      return;
+    }
+
+    const choicesString = Object.entries(answers)
+      .map(([key, value]) =>
+        key === "workStyles" ? `Work Styles: ${value.join(", ")}` : `${key}: ${value}`
+      )
+      .join(", ");
+
+    try {
+      setLoading(true); // start loading
+      const response = await axios.post("http://localhost:8080/api/career-suggestions", {
+        choices: choicesString,
+      });
+
+      localStorage.setItem("suggestions", response.data.suggestions.content);
+      toast.success("Responses submitted! Redirecting...");
+      navigate("/result");
+    } catch (error) {
+      console.error("Submission Error:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // stop loading
+    }
+  };
+
+
+  return (
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-2xl">
+        <h2 className="text-xl font-bold mb-4">
+          {isWorkStylePhase
+            ? "Work Style Preferences"
+            : `Question ${page + 1} of ${interestQuestions.length}`}
+        </h2>
+
+        {!isWorkStylePhase ? (
+          <>
+            <p className="mb-4 text-gray-700">{interestQuestions[page].question}</p>
+            <div className="space-y-2">
+              {options.map((option) => (
+                <label key={option} className="block cursor-pointer">
+                  <input
+                    type="radio"
+                    name={`answer-${page}`}
+                    value={option}
+                    checked={
+                      options[answers[interestQuestions[page].short] - 1] === option
+                    }
+                    onChange={() => handleOptionChange(option)}
+                    className="mr-2"
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+            {page > 0 && (
+              <button
+                onClick={handlePrevious}
+                className="mt-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+              >
+                Previous
+              </button>
+            )}
+          </>
+        ) : (
+          <>
+            <p className="mb-4 text-gray-700">
+              Select up to 5 work styles that best describe you:
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {workStyleOptions.map((style) => (
+                <label
+                  key={style}
+                  className={`border rounded p-2 text-center cursor-pointer ${(answers.workStyles || []).includes(style)
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100"
+                    }`}
+                  onClick={() => handleOptionChange(style)}
+                >
+                  {style}
+                </label>
+              ))}
+            </div>
+            <p className="mt-4 text-sm text-gray-500">
+              Selected: {(answers.workStyles || []).join(", ")}
+            </p>
+
+            <div className="mt-6 flex justify-between">
+              <button
+                onClick={handlePrevious}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 text-white rounded"
+              >
+                {loading ? "Loading Answers..." : "Submit"}
+              </button>
+
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Interest;
+
+
+
+
+
 
