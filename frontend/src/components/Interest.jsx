@@ -367,7 +367,7 @@ const Interest = () => {
 
     try {
       setLoading(true); // start loading
-      const response = await axios.post("http://localhost:8080/api/career-suggestions", {
+      const response = await axios.post("https://career-compass-79i1.onrender.com/api/career-suggestions", {
         choices: choicesString,
       });
 
