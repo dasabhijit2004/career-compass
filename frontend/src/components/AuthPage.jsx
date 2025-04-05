@@ -104,7 +104,7 @@ export default function AuthPage() {
             }`}
         >
           <img
-            src="src/assets/image1.jpg"
+            src="/image1.jpg"
             alt="Auth"
             className="w-full h-full object-cover"
           />
