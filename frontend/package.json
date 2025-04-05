@@ -13,6 +13,7 @@
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/vite": "^4.0.17",
     "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
     "firebase": "^11.6.0",
     "formik": "^2.4.6",
     "jspdf": "^3.0.1",

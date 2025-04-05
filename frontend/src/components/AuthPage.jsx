@@ -84,8 +84,10 @@ export default function AuthPage() {
         },
         { merge: true }
       );
-
+      console.log("Login success. Navigating to homepage...");
       navigate('/');
+
+      // navigate('/');
     } catch (error) {
       alert(error.message);
     }
@@ -94,14 +96,12 @@ export default function AuthPage() {
   return (
     <div className="flex justify-center items-center min-h-screen w-full">
       <div
-        className={`flex bg-white ${
-          isLogin ? 'rounded-r-xl' : 'rounded-l-xl'
-        } shadow-lg shadow-gray-200 w-11/12 md:w-1/2 transition-transform duration-500 ease-in-out transform ${animation}`}
+        className={`flex bg-white ${isLogin ? 'rounded-r-xl' : 'rounded-l-xl'
+          } shadow-lg shadow-gray-200 w-11/12 md:w-1/2 transition-transform duration-500 ease-in-out transform ${animation}`}
       >
         <div
-          className={`w-1/2 ${isLogin ? 'order-last' : ''} hidden md:block overflow-hidden ${
-            isLogin ? 'rounded-r-xl' : 'rounded-l-xl'
-          }`}
+          className={`w-1/2 ${isLogin ? 'order-last' : ''} hidden md:block overflow-hidden ${isLogin ? 'rounded-r-xl' : 'rounded-l-xl'
+            }`}
         >
           <img
             src="src/assets/image1.jpg"
@@ -210,4 +210,3 @@ export default function AuthPage() {
     </div>
   );
 }
-  

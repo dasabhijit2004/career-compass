@@ -282,30 +282,6 @@ const interestQuestions = [
   },
 ];
 
-// const interestQuestions = [
-//   {
-//     question: "I prefer working independently rather than in a team.",
-//     short: "Prefer independent work.",
-//   },
-//   {
-//     question: "I enjoy interacting with new people and networking.",
-//     short: "Enjoy networking.",
-//   },
-//   {
-//     question: "I thrive in structured and organized environments.",
-//     short: "Prefer structured environments.",
-//   },
-//   {
-//     question: "I am comfortable taking risks in my career decisions.",
-//     short: "Comfortable with career risks.",
-//   },
-//   {
-//     question:
-//       "I often rely on logic rather than emotions when making decisions.",
-//     short: "Logical decision-maker.",
-//   },
-// ];
-
 const workStyleOptions = [
   "Independent",
   "Analytical",

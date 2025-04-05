@@ -1,15 +1,17 @@
 import express from "express";
 const router = express.Router();
 import { Mistral } from '@mistralai/mistralai';
+import dotenv from "dotenv";
+dotenv.config();
 
-const apiKey = process.env.MISTRAL_API_KEY || 'HhgZWUjah9S1Q8DVKMrMpodEtl3e6Pfi';
+const apiKey = process.env.MISTRAL_API_KEY;
 
 const client = new Mistral({ apiKey: apiKey });
 
 // Function to get career suggestions
 const getCareerSuggestions = async (choices) => {
     const response = await client.agents.complete({
-        agentId: "ag:456dff0a:20250327:untitled-agent:f4bf8ee7",
+        agentId: process.env.CAREER_AI_AGENT,
         messages: [{ role: 'user', content: choices }],
     });
     
@@ -19,7 +21,7 @@ const getCareerSuggestions = async (choices) => {
 // Function to extract resume keywords
 const getResumeKeywords = async (jobDescription) => {
     const response = await client.agents.complete({
-        agentId: "ag:456dff0a:20250403:jd-suggestion:09df26a3",
+        agentId: KEYW0RD_AI_AGENT,
         messages: [{ role: 'user', content: jobDescription }],
     });
     console.log("Response from Mistral:", response);
