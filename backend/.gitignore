@@ -4,9 +4,8 @@ node_modules/
 # Ignore environment variables
 .env
 
-# Ignore Google Cloud service account key
-backend/serviceAccountKey.json
-*.json
+# Ignore only the service account key
+serviceAccountKey.json
 
 # Ignore other potential sensitive files
 *.log
